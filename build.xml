@@ -1,0 +1,40 @@
+<project name="ss-common-server" xmlns:ivy="antlib:org.apache.ivy.ant" default="build">
+
+	<import file="../ss-common-ivy/build.xml" />
+
+	<property name="lib.dir" value="${basedir}/lib" />
+	<property name="lib.sources.dir" value="${basedir}/lib/sources" />
+	<property name="src.dir" value="${basedir}/src" />
+
+	<path id="project.classpath">
+		<fileset dir="${lib.dir}" includes="**.jar" />
+	</path>
+
+	<target name="compile" depends="prepare-build-dir, resolve, resolve-sources">
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" debug="on" encoding="utf-8" source="1.6" target="1.6" failonerror="true">
+			<classpath refid="project.classpath" />
+		</javac>
+	</target>
+
+	<target name="create-jar" depends="compile">
+		<jar destfile="${build.dir}/jar/${artifact.name}.jar" basedir="${classes.dir}">
+			<!--
+			<fileset dir="${src.dir}">
+				<include name="**/*.java" />
+				<include name="**/*.xml" />
+			</fileset>
+			-->
+		</jar>
+	</target>
+
+	<target name="create-jar-sources">
+		<jar jarfile="${build.dir}/source/${artifact.name}.jar">
+			<fileset dir="${src.dir}" />
+		</jar>
+	</target>
+
+	<target name="build" depends="create-jar, create-jar-sources" />
+
+	<target name="publish-local" depends="build, ivy-publish-local" />
+
+</project>

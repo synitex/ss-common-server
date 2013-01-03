@@ -1,0 +1,23 @@
+<ivy-module version="1.0">
+	<info organisation="com.ss" module="ss-common-server" />	
+	<configurations>
+        <conf name="compile" visibility="private" transitive="false" />
+        <conf name="client" visibility="public" />       
+        <conf name="sources" visibility="public"/>          
+        <conf name="master" visibility="public"/>          
+    </configurations>
+    <publications>
+        <artifact name="ss-common-server" type="jar"  conf="client" ext="jar"/>        
+        <artifact name="ss-common-server" type="source" ext="jar" conf="sources"/>
+    </publications>
+	<dependencies>
+		<dependency org="com.ss" name="ss-common-gwt" rev="1.0.0" conf="client,sources" />
+		
+		<dependency org="com.google.code.gson" name="gson" rev="2.2.2" conf="client,sources->default" />							
+		<dependency org="commons-collections" name="commons-collections" rev="3.2.1" conf="client,sources->default" />
+		<dependency org="commons-lang" name="commons-lang" rev="2.6" conf="client,sources->default" />
+		
+		<dependency org="javax.servlet" name="servlet-api" rev="2.5" conf="compile->default" />
+		
+	</dependencies>
+</ivy-module>
