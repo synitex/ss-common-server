@@ -1,7 +1,6 @@
 package com.ss.common.server.jsonrpc;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,7 +15,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.LongSerializationPolicy;
-import com.ss.common.gwt.jsonrpc.shared.JsonDTO;
+import com.ss.common.gwt.jsonrpc.shared.JsonDto;
 
 
 public class ServerJsonHelper {
@@ -75,8 +74,7 @@ public class ServerJsonHelper {
 		return member.getAsString();
 	}
 
-	public static <T extends JsonDTO> T parse(String param, Class<T> clazz,
-			JsonObject json) {
+	public static <T extends JsonDto> T parse(String param, Class<T> clazz, JsonObject json) {
 		JsonElement jsonEl = json.get(param);
 		if (jsonEl == null) {
 			return null;
@@ -90,30 +88,47 @@ public class ServerJsonHelper {
 		}
 	}
 
-	public static <T extends JsonDTO> List<T> parseList(String param,
-			Class<T> clazz, JsonObject json) {
-		JsonElement jsonEl = json.get(param);
-		if (jsonEl == null) {
-			return null;
-		}
-		JsonArray array = jsonEl.getAsJsonArray();
-		if (array == null) {
-			return null;
-		}
-		int size = array.size();
-		List<T> values = new ArrayList<T>(size);
-		try {
-			for (int i = 0; i < size; i++) {
-				JsonElement el = array.get(i);
+	public static List<String> parseStrings(String param, JsonObject json) {
+		final List<String> values = new ArrayList<String>();
+		parseList(param, json, new Callback() {
+			@Override
+			public void parseItem(JsonElement el) {
+				values.add(el.getAsString());
+			}
+		});
+		return values;
+	}
+
+	public static <T extends JsonDto> List<T> parseList(String param, final Class<T> clazz, JsonObject json) {
+		final List<T> values = new ArrayList<T>();
+		parseList(param, json, new Callback() {
+			@Override
+			public void parseItem(JsonElement el) {
 				T parsedValue = GSON.fromJson(el, clazz);
 				values.add(parsedValue);
 			}
-			return values;
-		} catch (Exception e) {
-			log.log(Level.SEVERE, "Failed to parse json array", e);
-			return Collections.emptyList();
+		});
+		return values;
+	}
+	
+	public static void parseList(String param, JsonObject json, Callback callback) {
+		JsonElement jsonEl = json.get(param);
+		if (jsonEl == null) {
+			return;
 		}
+		JsonArray array = jsonEl.getAsJsonArray();
+		if (array == null) {
+			return;
+		}
+		int size = array.size();
+		for (int i = 0; i < size; i++) {
+			JsonElement el = array.get(i);
+			callback.parseItem(el);
+		}
+	}
 
+	public static interface Callback {
+		void parseItem(JsonElement el);
 	}
 
 }
