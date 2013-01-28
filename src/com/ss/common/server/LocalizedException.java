@@ -1,4 +1,4 @@
-package com.ss.common.server.jsonrpc;
+package com.ss.common.server;
 
 /**
  * Business exception. Service can throw this exception at any time to pass to

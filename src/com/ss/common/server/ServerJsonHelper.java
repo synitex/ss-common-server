@@ -1,4 +1,4 @@
-package com.ss.common.server.jsonrpc;
+package com.ss.common.server;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +62,17 @@ public class ServerJsonHelper {
 		}
 		return json;
 	}
+	
+	public static <T> T get(String param, Class clazz, JsonObject json) {
+		if (json == null || StringUtils.isEmpty(param)) {
+			return null;
+		}
+		JsonElement member = json.get(param);
+		if (member == null) {
+			return null;
+		}
+		return (T) GSON.fromJson(member, clazz);
+	}
 
 	public static String getString(String param, JsonObject json) {
 		if (json == null || StringUtils.isEmpty(param)) {
@@ -72,6 +83,17 @@ public class ServerJsonHelper {
 			return "";
 		}
 		return member.getAsString();
+	}
+
+	public static Long getLong(String param, JsonObject json) {
+		if (json == null || StringUtils.isEmpty(param)) {
+			return null;
+		}
+		JsonElement member = json.get(param);
+		if (member == null) {
+			return null;
+		}
+		return member.getAsLong();
 	}
 
 	public static <T extends JsonDto> T parse(String param, Class<T> clazz, JsonObject json) {
@@ -98,6 +120,18 @@ public class ServerJsonHelper {
 		});
 		return values;
 	}
+	
+	public static List parseGenericList(String param, final Class clazz, JsonObject json) {
+		final List values = new ArrayList();
+		parseList(param, json, new Callback() {
+			@Override
+			public void parseItem(JsonElement el) {
+				Object parsedValue = GSON.fromJson(el, clazz);
+				values.add(parsedValue);
+			}
+		});
+		return values;
+	}
 
 	public static <T extends JsonDto> List<T> parseList(String param, final Class<T> clazz, JsonObject json) {
 		final List<T> values = new ArrayList<T>();
@@ -111,7 +145,7 @@ public class ServerJsonHelper {
 		return values;
 	}
 	
-	public static void parseList(String param, JsonObject json, Callback callback) {
+	private static void parseList(String param, JsonObject json, Callback callback) {
 		JsonElement jsonEl = json.get(param);
 		if (jsonEl == null) {
 			return;

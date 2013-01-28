@@ -4,20 +4,28 @@
         <conf name="compile" visibility="private" transitive="false" />
         <conf name="client" visibility="public" />       
         <conf name="sources" visibility="public"/>          
-        <conf name="master" visibility="public"/>          
+        <conf name="master" visibility="public"/>     
+        <conf name="runtime" visibility="public"  extends="compile"/>    
+        <conf name="test" visibility="private" extends="runtime"/> 
     </configurations>
     <publications>
         <artifact name="ss-common-server" type="jar"  conf="client" ext="jar"/>        
         <artifact name="ss-common-server" type="source" ext="jar" conf="sources"/>
     </publications>
 	<dependencies>
+	
 		<dependency org="com.ss" name="ss-common-gwt" rev="1.0.0" conf="client,sources" />
 		
 		<dependency org="com.google.code.gson" name="gson" rev="2.2.2" conf="client,sources->default" />							
 		<dependency org="commons-collections" name="commons-collections" rev="3.2.1" conf="client,sources->default" />
 		<dependency org="commons-lang" name="commons-lang" rev="2.6" conf="client,sources->default" />
-		
+		<dependency org="ch.qos.logback" name="logback-classic" rev="1.0.9" conf="client,sources->default" />	
+		<dependency org="joda-time" name="joda-time" rev="2.1" conf="client,sources->default" />			
 		<dependency org="javax.servlet" name="servlet-api" rev="2.5" conf="compile->default" />
+		<dependency org="org.springframework" name="spring-context" rev="3.2.0.RELEASE" conf="client,sources->default" />		
+		<dependency org="org.springframework" name="spring-web" rev="3.2.0.RELEASE" conf="client,sources->default" />
+		
+		<dependency org="junit" name="junit" rev="4.11" conf="test->default" />
 		
 	</dependencies>
 </ivy-module>
