@@ -13,4 +13,6 @@ public @interface JsonRpcServiceMethod {
 
 	String[] paramIds() default "";
 	
+	boolean isPublic() default true;
+
 }

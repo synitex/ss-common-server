@@ -116,11 +116,11 @@ public class JsonRpcServices {
 			Method method = mm.getMethod();
 			return args == null ? method.invoke(instance) : method.invoke(instance, args);
 		} catch (IllegalArgumentException e) {
-			throw new JsonRpcServiceCallException("Failed to call service " + serviceId + "." + mm.getMethodId() + ".", e);
+			throw new JsonRpcCallException("Failed to call service " + serviceId + "." + mm.getMethodId() + ".", e);
 		} catch (IllegalAccessException e) {
-			throw new JsonRpcServiceCallException("Failed to call service " + serviceId + "." + mm.getMethodId() + ".", e);
+			throw new JsonRpcCallException("Failed to call service " + serviceId + "." + mm.getMethodId() + ".", e);
 		} catch (InvocationTargetException e) {
-			throw new JsonRpcServiceCallException("Failed to call service " + serviceId + "." + mm.getMethodId() + ".", e);
+			throw new JsonRpcCallException("Failed to call service " + serviceId + "." + mm.getMethodId() + ".", e);
 		}
 	}
 
